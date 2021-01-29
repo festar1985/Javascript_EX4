@@ -56,12 +56,8 @@ function main(input, battle) {
 
     });
 
-
-
-    //console.log(uniqueKingdoms);
-
     let winner = {}
-    debugger
+    
     for (const elementkingdon of Object.keys(uniqueKingdoms)) {
 
         winner[elementkingdon] = { "wins": 0, "looses": 0 };
@@ -70,15 +66,10 @@ function main(input, battle) {
 
         for (const elementgeneral of Object.entries(uniqueKingdoms[elementkingdon])) {
 
-            //console.log(elementgeneral[1].wins);
-            //console.log(uniqueKingdoms[elementkingdon].elementgeneral);
-
-
-
             winner[elementkingdon].wins += parseInt(elementgeneral[1].wins);
             winner[elementkingdon].looses += parseInt(elementgeneral[1].looses);
-
         }
+
 
 
 

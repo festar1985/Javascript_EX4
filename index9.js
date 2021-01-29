@@ -33,48 +33,67 @@ function main(input, battle) {
     };
 
     battle.forEach(element => {
+        let kingdomA = element[0];
+        let kingdomB = element[2];
+
+        let generalA = uniqueKingdoms[element[0]][element[1]];
+        let generalB = uniqueKingdoms[element[2]][element[3]];
 
         let armyA = uniqueKingdoms[element[0]][element[1]].armyCount;
         let armyB = uniqueKingdoms[element[2]][element[3]].armyCount;
 
-        if (uniqueKingdoms[element[0]] === uniqueKingdoms[element[2]]) {
+        if (kingdomA === kingdomB) {
             return;
 
         } else if (armyA > armyB) {
-            uniqueKingdoms[element[0]][element[1]].armyCount = Math.floor(armyA * 1.1);
-            uniqueKingdoms[element[2]][element[3]].armyCount = Math.floor(armyB * 0.9);
-            uniqueKingdoms[element[0]][element[1]].wins += 1;
-            uniqueKingdoms[element[2]][element[3]].looses += 1;
+            generalA.armyCount = Math.floor(armyA * 1.1);
+            generalB.armyCount = Math.floor(armyB * 0.9);
+            generalA.wins += 1;
+            generalB.looses += 1;
+            return;
 
         } else {
-            uniqueKingdoms[element[0]][element[1]].armyCount = Math.floor(armyA * 0.9);
-            uniqueKingdoms[element[2]][element[3]].armyCount = Math.floor(armyB * 1.1);
-            uniqueKingdoms[element[0]][element[1]].looses += 1;
-            uniqueKingdoms[element[2]][element[3]].wins += 1;
-
+            generalA.armyCount = Math.floor(armyA * 0.9);
+            generalB.armyCount = Math.floor(armyB * 1.1);
+            generalA.looses += 1;
+            generalB.wins += 1;
+            return;
         }
 
     });
+    debugger
+    let sortedKingdoms = (Object.entries(uniqueKingdoms)).map(fa => fa);
+    console.log(`Winner : ${sortedKingdoms[0]}`)
 
-    let winner = {}
-    
-    for (const elementkingdon of Object.keys(uniqueKingdoms)) {
+    sortedKingdoms.sort((a, b) => {
+        let [kingdomAname, generalAname] = a;
+        let [kingdomBname, generalBname] = b;
 
-        winner[elementkingdon] = { "wins": 0, "looses": 0 };
+        let kingdomAWins = Object.entries(generalAname).map(kA => kA[1].wins).reduce((c, d) => c - d);
+        let kingdomBWins = Object.entries(generalBname).map(kB => kB[1].wins).reduce((c, d) => c - d);
+
+        let firstCriteria = kingdomBWins - kingdomAWins;
+
+        if (firstCriteria === 0) {
+            let kingdomALosses = [...generalsAMap.entries()].map(kA => kA[1].looses).reduce((c, d) => d - c);
+            let kingdomBLosses = [...generalsBMap.entries()].map(kB => kB[1].looses).reduce((c, d) => d - c);
+
+            let secondCriteria = kingdomALosses - kingdomBLosses;
+            if (secondCriteria === 0) {
+
+                let thirdCriteria = kingdomAname.localCompare(kingdomBname);
+                return thirdCriteria;
+            }
+            return secondCriteria;
+        };
 
 
+        return firstCriteria
 
-        for (const elementgeneral of Object.entries(uniqueKingdoms[elementkingdon])) {
+    });
 
-            winner[elementkingdon].wins += parseInt(elementgeneral[1].wins);
-            winner[elementkingdon].looses += parseInt(elementgeneral[1].looses);
-        }
+    console.log(sortedKingdoms);
 
-
-
-
-    }
-    console.log(winner)
 };
 
 main(input, battle);
